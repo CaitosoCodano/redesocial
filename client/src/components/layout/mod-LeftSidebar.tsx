@@ -1,4 +1,6 @@
 import { Home, Search, Bell, MessageSquare, User, Settings } from "lucide-react";
+import NotificationsPopover from "../notifications/mod-NotificationsPopover";
+import UserMenu from "../user/mod-UserMenu";
 
 export default function LeftSidebar() {
   return (
@@ -47,13 +49,10 @@ export default function LeftSidebar() {
             Pesquisar
           </a>
 
-          <a
-            href="#"
-            className="flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-primary"
-          >
-            <Bell className="h-5 w-5 mr-3" />
-            Notificações
-          </a>
+          <div className="flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 hover:text-primary">
+            <NotificationsPopover />
+            <span className="ml-3">Notificações</span>
+          </div>
 
           <a
             href="#"
@@ -83,17 +82,7 @@ export default function LeftSidebar() {
         <hr className="my-6 border-gray-200" />
 
         <div className="mt-auto">
-          <div className="flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-700">
-            <img
-              className="h-8 w-8 rounded-full object-cover mr-3"
-              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-              alt="User profile"
-            />
-            <div>
-              <p className="font-medium text-gray-800">João Silva</p>
-              <p className="text-xs text-gray-500">@joaosilva</p>
-            </div>
-          </div>
+          <UserMenu />
         </div>
       </nav>
     </div>

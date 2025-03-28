@@ -1,8 +1,10 @@
 import Layout from "@/components/layout/Layout";
-import LeftSidebar from "@/components/layout/LeftSidebar";
-import RightSidebar from "@/components/layout/RightSidebar";
-import StoriesSection from "@/components/stories/StoriesSection";
-import PostsSection from "@/components/posts/PostsSection";
+import LeftSidebar from "@/components/layout/mod-LeftSidebar";
+import RightSidebar from "@/components/layout/mod-RightSidebar";
+import StoriesSection from "@/components/stories/mod-StoriesSection";
+import CreatePostCard from "@/components/posts/mod-CreatePostCard";
+import { posts } from "@/lib/data";
+import PostCard from "@/components/posts/mod-PostCard";
 
 export default function Home() {
   return (
@@ -55,7 +57,12 @@ export default function Home() {
         <main className="flex-1 flex">
           <div className="flex-1 max-w-5xl mx-auto px-4 py-6 w-full">
             <StoriesSection />
-            <PostsSection />
+            <CreatePostCard />
+            <div className="space-y-6">
+              {posts.map(post => (
+                <PostCard key={post.id} post={post} />
+              ))}
+            </div>
           </div>
         </main>
       </div>

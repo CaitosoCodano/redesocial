@@ -7,20 +7,52 @@ async function throwIfResNotOk(res: Response) {
   }
 }
 
-export async function apiRequest(
-  method: string,
-  url: string,
-  data?: unknown | undefined,
-): Promise<Response> {
+// Tipos para requisições API
+interface ApiRequestOptions {
+  url: string;
+  method: string;
+  body?: unknown;
+  headers?: Record<string, string>;
+}
+
+// Função melhorada para fazer requisições API
+export async function apiRequest<T = any>({
+  url,
+  method,
+  body,
+  headers = {},
+}: ApiRequestOptions): Promise<T> {
+  // Obter token do localStorage
+  const token = localStorage.getItem('token');
+
+  // Adicionar cabeçalhos padrão + autenticação se disponível
+  const defaultHeaders: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...headers
+  };
+
+  // Adicionar token de autenticação se disponível
+  if (token) {
+    defaultHeaders['Authorization'] = `Bearer ${token}`;
+  }
+
+  // Fazer a requisição
   const res = await fetch(url, {
     method,
-    headers: data ? { "Content-Type": "application/json" } : {},
-    body: data ? JSON.stringify(data) : undefined,
-    credentials: "include",
+    headers: defaultHeaders,
+    body: body ? JSON.stringify(body) : undefined,
+    credentials: 'include',
   });
 
+  // Verificar erros
   await throwIfResNotOk(res);
-  return res;
+  
+  // Retornar JSON se houver conteúdo, ou objeto vazio se resposta for vazia
+  if (res.status !== 204) { // No Content
+    return await res.json() as T;
+  }
+  
+  return {} as T;
 }
 
 type UnauthorizedBehavior = "returnNull" | "throw";
@@ -29,8 +61,18 @@ export const getQueryFn: <T>(options: {
 }) => QueryFunction<T> =
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
+    // Obter token do localStorage
+    const token = localStorage.getItem('token');
+    
+    // Preparar headers com token de autenticação se disponível
+    const headers: Record<string, string> = {};
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    
     const res = await fetch(queryKey[0] as string, {
       credentials: "include",
+      headers
     });
 
     if (unauthorizedBehavior === "returnNull" && res.status === 401) {

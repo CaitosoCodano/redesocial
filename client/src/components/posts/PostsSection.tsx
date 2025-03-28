@@ -1,6 +1,6 @@
 import { useState } from "react";
-import PostCard from "./PostCard";
-import CreatePostCard from "./CreatePostCard";
+import PostCard from "./mod-PostCard";
+import CreatePostCard from "./mod-CreatePostCard";
 import { posts } from "@/lib/data";
 
 export default function PostsSection() {
